@@ -29,6 +29,9 @@ class SettingsServiceProvider extends ServiceProvider
         'pterodactyl:console:count',
         'pterodactyl:console:frequency',
         'pterodactyl:auth:2fa_required',
+        'pterodactyl:auth:oauth:enabled',
+        'pterodactyl:auth:oauth:drivers',
+        'pterodactyl:auth:oauth:required',
     ];
 
     /**
@@ -55,6 +58,7 @@ class SettingsServiceProvider extends ServiceProvider
      */
     protected static $encrypted = [
         'mail:password',
+        'pterodactyl:auth:oauth:drivers',
     ];
 
     /**

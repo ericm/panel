@@ -20,6 +20,7 @@ type OwnProps = RouteComponentProps & {
 const LoginContainer = ({ isSubmitting, setFieldValue, values, submitForm, handleSubmit }: OwnProps & FormikProps<LoginData>) => {
     const ref = useRef<ReCAPTCHA | null>(null);
     const { enabled: recaptchaEnabled, siteKey } = useStoreState<ApplicationStore, any>(state => state.settings.data!.recaptcha);
+    const { enabled: oauthEnabled, required: oauthRequired, drivers } = useStoreState<ApplicationStore, any>(state => state.settings.data!.oauth);
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -39,55 +40,72 @@ const LoginContainer = ({ isSubmitting, setFieldValue, values, submitForm, handl
                 className={'w-full flex'}
                 onSubmit={submit}
             >
-                <label htmlFor={'username'}>Username or Email</label>
-                <Field
-                    type={'text'}
-                    id={'username'}
-                    name={'username'}
-                    className={'input'}
-                />
-                <div className={'mt-6'}>
-                    <label htmlFor={'password'}>Password</label>
+                {(!oauthEnabled || !oauthRequired) &&
+                <React.Fragment>
+                    <label htmlFor={'username'}>Username or Email</label>
                     <Field
-                        type={'password'}
-                        id={'password'}
-                        name={'password'}
+                        type={'text'}
+                        id={'username'}
+                        name={'username'}
                         className={'input'}
                     />
-                </div>
-                <div className={'mt-6'}>
-                    <button
-                        type={'submit'}
-                        className={'btn btn-primary btn-jumbo'}
-                    >
-                        {isSubmitting ?
-                            <Spinner size={'tiny'} className={'mx-auto'}/>
-                            :
-                            'Login'
-                        }
-                    </button>
-                </div>
-                {recaptchaEnabled &&
-                <ReCAPTCHA
-                    ref={ref}
-                    size={'invisible'}
-                    sitekey={siteKey || '_invalid_key'}
-                    onChange={token => {
-                        ref.current && ref.current.reset();
-                        setFieldValue('recaptchaData', token);
-                        submitForm();
-                    }}
-                    onExpired={() => setFieldValue('recaptchaData', null)}
-                />
+                    <div className={'mt-6'}>
+                        <label htmlFor={'password'}>Password</label>
+                        <Field
+                            type={'password'}
+                            id={'password'}
+                            name={'password'}
+                            className={'input'}
+                        />
+                    </div>
+                    <div className={'mt-6'}>
+                        <button
+                            type={'submit'}
+                            className={'btn btn-primary btn-jumbo'}
+                        >
+                            {isSubmitting ?
+                                <Spinner size={'tiny'} className={'mx-auto'}/>
+                                :
+                                'Login'
+                            }
+                        </button>
+                    </div>
+                    {recaptchaEnabled &&
+                    <ReCAPTCHA
+                        ref={ref}
+                        size={'invisible'}
+                        sitekey={siteKey || '_invalid_key'}
+                        onChange={token => {
+                            ref.current && ref.current.reset();
+                            setFieldValue('recaptchaData', token);
+                            submitForm();
+                        }}
+                        onExpired={() => setFieldValue('recaptchaData', null)}
+                    />
+                    }
+                    <div className={'mt-6 text-center'}>
+                        <Link
+                            to={'/auth/password'}
+                            className={'text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600'}
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
+                    { oauthEnabled &&
+                    <div className={'border-t-2 border-neutral-50 my-4'}/>
+                    }
+                </React.Fragment>
                 }
-                <div className={'mt-6 text-center'}>
-                    <Link
-                        to={'/auth/password'}
-                        className={'text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600'}
-                    >
-                        Forgot password?
-                    </Link>
+                { oauthEnabled &&
+                <div className={'text-s text-neutral-500 text-center' + (oauthRequired ? ' mt-20' : '')}>
+                    {JSON.parse(drivers).map((driver: string) => (
+                        <a href={'/auth/oauth?driver=' + driver}>
+                            <img src={'/assets/svgs/' + driver + '.svg'} className={'inline-block w-12 mx-1'} alt={driver}/>
+                        </a>
+                    ))}
                 </div>
+                }
+
             </LoginFormContainer>
         </React.Fragment>
     );

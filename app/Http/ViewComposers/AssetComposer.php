@@ -29,6 +29,13 @@ class AssetComposer
      */
     public function compose(View $view)
     {
+        $drivers = [];
+        $driversConfig = json_decode(app('config')->get('pterodactyl.auth.oauth.drivers'), true);
+
+        foreach ($driversConfig as $driver => $options) {
+            if ($options['enabled']) array_push($drivers, $driver);
+        }
+
         $view->with('asset', $this->assetHashService);
         $view->with('siteConfiguration', [
             'name' => config('app.name') ?? 'Pterodactyl',
@@ -36,6 +43,11 @@ class AssetComposer
             'recaptcha' => [
                 'enabled' => config('recaptcha.enabled', false),
                 'siteKey' => config('recaptcha.website_key') ?? '',
+            ],
+            'oauth' => [
+                'enabled' => config('pterodactyl.auth.oauth.enabled', false),
+                'required' => config('pterodactyl.auth.oauth.required', 0) == 3,
+                'drivers' => json_encode($drivers),
             ],
         ]);
     }

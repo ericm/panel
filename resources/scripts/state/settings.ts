@@ -7,6 +7,11 @@ export interface SiteSettings {
         enabled: boolean;
         siteKey: string;
     };
+    oauth: {
+        enabled: boolean;
+        required: boolean;
+        drivers: string;
+    };
 }
 
 export interface SettingsStore {

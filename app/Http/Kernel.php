@@ -26,6 +26,7 @@ use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Pterodactyl\Http\Middleware\Api\AuthenticateIPAccess;
 use Pterodactyl\Http\Middleware\Api\ApiSubstituteBindings;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Pterodactyl\Http\Middleware\RequireOAuthAuthentication;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Pterodactyl\Http\Middleware\Server\AccessingValidServer;
 use Pterodactyl\Http\Middleware\Server\AuthenticateAsSubuser;
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
             LanguageMiddleware::class,
             RequireTwoFactorAuthentication::class,
+            RequireOAuthAuthentication::class,
         ],
         'api' => [
             'throttle:240,1',

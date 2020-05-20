@@ -6,6 +6,7 @@ import ConfigureTwoFactorForm from '@/components/dashboard/forms/ConfigureTwoFac
 import styled from 'styled-components';
 import { breakpoint } from 'styled-components-breakpoint';
 import PageContentBlock from '@/components/elements/PageContentBlock';
+import ConfigureOAuthForm from "@/components/dashboard/forms/ConfigureOAuthForm";
 
 const Container = styled.div`
     ${tw`flex flex-wrap my-10`};
@@ -37,9 +38,14 @@ export default () => {
                 >
                     <UpdateEmailAddressForm/>
                 </ContentBox>
-                <ContentBox className={'xl:ml-8 mt-8 xl:mt-0'} title={'Configure Two Factor'}>
-                    <ConfigureTwoFactorForm/>
-                </ContentBox>
+                <div>
+                    <ContentBox className={'xl:ml-8 mt-8 xl:mt-0 mb-4'} title={'Configure Two Factor'}>
+                        <ConfigureTwoFactorForm/>
+                    </ContentBox>
+                    <ContentBox className={'xl:ml-8 mt-8 xl:mt-0'} title={'Configure OAuth'}>
+                        <ConfigureOAuthForm/>
+                    </ContentBox>
+                </div>
             </Container>
         </PageContentBlock>
     );

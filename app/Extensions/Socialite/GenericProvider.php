@@ -65,7 +65,7 @@ class GenericProvider extends AbstractProvider
     protected function getUserByToken($token)
     {
         $response = $this->getHttpClient()->get(
-            'https://discord.com/api/users/@me',
+            $this->userUrl,
             [
                 'headers' => [
                     'Authorization' => 'Bearer '.$token,
